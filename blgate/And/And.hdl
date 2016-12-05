@@ -1,0 +1,14 @@
+/**
+ * And gate:
+ * out = 1 if (a == 1 and b == 1)
+ *       0 if otherwise
+ */
+
+CHIP And {
+  IN a, b;
+  OUT out;
+
+  PARTS:
+  NAND (a = a, b = b, out = o1);
+  NOT (in = o1, out = out);
+}
