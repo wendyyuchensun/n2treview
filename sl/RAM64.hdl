@@ -1,0 +1,16 @@
+CHIP RAM64 {
+  IN in[16], address[6], load;
+  OUT out[16];
+  
+  PARTS:
+  DMux8Way (in = load, sel =address[3..5], a = o1, b = o2, c = o3, d = o4, e = o5, f = o6, g = o7, h = o8);
+  RAM8 (in = in, load = load, address = address[0..2], out = w1);
+  RAM8 (in = in, load = load, address = address[0..2], out = w2);
+  RAM8 (in = in, load = load, address = address[0..2], out = w3);
+  RAM8 (in = in, load = load, address = address[0..2], out = w4);
+  RAM8 (in = in, load = load, address = address[0..2], out = w5);
+  RAM8 (in = in, load = load, address = address[0..2], out = w6);
+  RAM8 (in = in, load = load, address = address[0..2], out = w7);
+  RAM8 (in = in, load = load, address = address[0..2], out = w8);
+  Mux8Way16 (a = w1, b = w2, c = w3, d = w4, e = w5, f = w6, g = w7, h = w8, sel = address[3..5], out = out);
+}
