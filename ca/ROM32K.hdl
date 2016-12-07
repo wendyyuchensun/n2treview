@@ -1,0 +1,7 @@
+CHIP ROM {
+  IN address[15];
+  Out out[16];
+
+  PARTS:
+  RAM32K (in = false, load = false, address = address[0..14], out = out);
+}

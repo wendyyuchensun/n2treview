@@ -1,0 +1,42 @@
+CHIP CPU {
+  IN inM[16], instruction[16], reset;
+  Out outM[16], writeM, addressM[15], pc[15];
+  
+  PARTS:
+  // A inst / C inst?
+  Not (in = instruction[15], out = ainsct);  // If ainst = 1, inst is an A inst
+  Not (in = ainst, out = cinst);  // If cinst = 1, inst is a C inst
+  
+  // Probe ARegister value
+  Mux16 (a = instruction, b = aluout, sel = cinst, out = newa);
+  And (a = cinst, b = instruction[5], out = writeA);
+  Or (a = ainst, b = writeA, out = loada);
+  ARegister (in = newa, load = loada, out = a, out[0..14] = addressM, out[0..14] = pcin); 
+  
+  // Probe DRegister value
+  And (a = cinst, b = sel[4], out = writeD);
+  DRegister (in = aluout, load = writeD, out = d);  
+
+  // ALU computation
+  Mux16 (a = a, b = inM, sel = instruction[12], out = aorm);
+  And (a = instruction[11], b = true, out = zx);
+  And (a = instruction[10], b = true, out = nx);
+  And (a = instruction[9], b = true, out = zy);
+  And (a = instruction[8], b = true, out = ny);
+  And (a = instruction[7], b = true, out = f);
+  And (a = instruction[6], b = true, out = no);
+  ALU (x = d, y = aorm, zx = zx, nx = nx, zy = zy, ny = ny, f = f, no = no, out = outM, out = aluout, zr = zr, ng = ng);
+  
+  // Write to M?
+  And (a = cinst, b = instruction[3], out = writeM);
+
+  // PC
+  And (a = instruction[1], b = zr, out = w1);
+  Not (in = ng, out = notng);
+  And (a = instuction[0], b = notng, out = w2);
+  Not (in = zr, out = notzr);
+  And (a = notzr, b = notng, out = w3);
+  Or (a = w1, b = w2, out = w4);
+  Or (a = w3, b = w4, out = jump); 
+  PC (in = pcin, load = jump, inc = true, reset = reset, out = pc);
+}
