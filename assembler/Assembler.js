@@ -9,5 +9,4 @@ fs.readFile(__dirname + '/Max.asm', (err, data) => {
                     .split('\n');
   var clearedDArr = clear.clear(rawDArr);
   var sTable = st.st(clearedDArr);
-  console.log(sTable);
 });

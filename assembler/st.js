@@ -11,19 +11,34 @@ module.exports = {
       }
     };
     var noLDArr = [];
-    clearedDArr.forEach((item) => {
+    clearedDArr.forEach((item, index) => {
+    	var s, sIndex, move = 0;
       if (item.indexOf('(') === -1) {
         noLDArr.push(item); // A copy of instuctions, L ommited
+      } else {
+      	s = item.slice(1, item.length - 1);
+	sIndex = index - move;
+      	move++;	      
+      };
+      if (s) {
+	insertS(s, sIndex);
       };
     });
-    var s, sIndex;
-    clearedDArr.forEach((item, index) => {
-      if (item.indexOf('(') !== -1) {
-        s = item.splice(1, item.length - 1);
-        var nextItem = clearedDArr[index + 1];
-        sIndex = noLDArr.indexOf(nextItem); // What if there are more than 1 nextItem in noLDArr, meaning 2 or more assemly that look the same?
-      }
+    var baseIndex = 1024;
+    noLDArr.forEach((item) => {
+	var withoutAt = item.slice(1);
+	var isNaN = !(parseInt(withoutAt));
+    	if (item[0] === '@' && isNaN) {
+	   if (!sTable.hasOwnProperty(withoutAt)) {
+	       s = withoutAt;
+	       sIndex = baseIndex;
+	       baseIndex++;
+	   };
+	};
+	if (s) {
+	  insertS(s, sIndex);
+	};
     });
-    return sTable; 
+    return sTable;
   }
 }
