@@ -2,6 +2,8 @@
 //                         make a map of found variables
 //                         and correspondent value
 
+var fs = require('fs');
+
 module.exports = {
   st: (clearedDArr) => {
     var sTable = {
@@ -32,9 +34,7 @@ module.exports = {
     };
     function insertS (s, sIndex) {
       if (s) {
-        if (!sTable.hasOwnProperty(s)) {
-          sTable[s] = sIndex;
-        };
+        sTable[s] = sIndex;
       };
     };
     var noLDArr = [];
@@ -49,11 +49,11 @@ module.exports = {
       };
       insertS(s, sIndex);
     });
-    var baseIndex = 1024;
+    var baseIndex = 16;
     noLDArr.forEach((item) => {
       var withoutAt = item.slice(1);
-      var isNaN = !(parseInt(withoutAt));
-    	if (item[0] === '@' && isNaN) {
+      var isNaN = parseInt(withoutAt);
+    	if (item[0] === '@' && !isNaN && isNaN !== 0) {
         if (!sTable.hasOwnProperty(withoutAt)) {
           s = withoutAt;
           sIndex = baseIndex;
