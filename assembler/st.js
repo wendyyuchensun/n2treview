@@ -29,7 +29,7 @@ module.exports = {
       'ARG': '2',
       'THIS': '3',
       'THAT': '4',
-      'SCREEN': '16348',
+      'SCREEN': '16384',
       'KBD': '24576'
     };
     function insertS (s, sIndex) {
