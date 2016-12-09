@@ -33,7 +33,7 @@ module.exports = {
       if (item[0] === '@') {
         var withoutAt = item.slice(1);
         var isNaN = parseInt(withoutAt);
-        if (!isNaN) {
+        if (!isNaN && isNaN !== 0) {
           decodedItem = parseInt(sTable[withoutAt]).toString(2);
         } else {
           decodedItem = isNaN.toString(2);
