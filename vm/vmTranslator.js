@@ -1,5 +1,21 @@
-var fs = require('fs');
 var argv = require('yargs').argv;
-var clear = require('./clear.js');
+var fs = require('fs');
+var readline = require('readline');
+var clear = require('./modules/clear.js');
+var decode = require('./modules/parser.js');
 
-var newDArr = clear.clear(dArr);
+function errorMessage (err) {
+  console.log(err);
+};
+
+var rl = readline.createInterface({
+  input: fs.createReadStream(__dirname + '/SimpleAdd.vm')
+});
+
+rl.on('line', (command) => {
+  clear(command).then((clearedCommand) => {
+    decode(clearedcommand);
+  }, errorMessage(err)).then((decodedCommand) => {
+    
+  }, errorMessage(err))
+});
