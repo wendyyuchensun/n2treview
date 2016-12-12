@@ -1,4 +1,4 @@
-// Decoder: vm to assembly 
+// Decoder: cleared vm commands to assembly 
 
 // Commonly-used assembly instructions
 var c = {
