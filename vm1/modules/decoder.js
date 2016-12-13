@@ -21,14 +21,13 @@ var c = {
 // Comman parts of instructions
 var unaryBase = [atSP, atXY]; // neg, not
 var asaoBase = unary.push('D=M', atXY, atSP, 'A=A+1');  // add, sub, and, or
-var cdtlBase = asao.slice(0, 3)
-               .push('D=D-M', c.tf(1), 'D;', c.tf(), '0;JMP', c.tf(1, 1), atSP, 'M=-1', c.endA, c.tf(0, 1), ucdtlJMP, c.endA, atSP, 'M=0', c.endL)
-               .push(asaoBase.slice(4).split); // eq, gt, lt 
+var cdtlBase = asaoBase.slice(4, 0, 'D=D-M');
+console.log(cdtlBase);
 
 // Different parts of instructions among vms in same categories
 unaryInst2 = {
   neg: 'M=-M',
-  not = 'M=!M'
+  not: 'M=!M'
 };
 asaoInst4 = {
   add: 'M=D+M',
@@ -41,16 +40,16 @@ cdtl = {
 };
 
 // Comman ways to create instructions
-function createUnary (clearedCommand) => {
+function createUnary (clearedCommand) {
   return unaryBase.push(unaryInst2[clearedCommand]);
 };
-function createAsao (clearedCommand) => {
+function createAsao (clearedCommand) {
   return asasBase.slice(4, 0, asaoInst4[clearedCommand]);
 };
 
 module.exports = (clearedCommand) => {
   //  Map specific to assembly
-  switch (clearedCommand):
+  switch (clearedCommand)
     case 'neg':
     case 'not':
       return createUnary(clearedCommand);
