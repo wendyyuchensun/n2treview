@@ -1,9 +1,10 @@
 var fs = require('fs');
+var argv = require('yargs').argv;
 var asmMap = require('./asmMap.js');
 
 // Open file and turn it into an array
 // with every line made into an item
-fs.readFile(__dirname + '/SimpleAdd.vm', (err, data) => {
+fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
   if (err) throw err;
   var dArr = data.toString().split(/\n/);
   // Clear unwanted parts
@@ -31,21 +32,60 @@ fs.readFile(__dirname + '/SimpleAdd.vm', (err, data) => {
   function insertNumber (t, num) {
     return [t.slice(0, 6), num, t.slice(6)].join('');
   };
+  function msL (item) {
+    item = item.replace('push', '')
+               .replace('pop', '')
+               .trim();
+    var seg = item;
+    seg = seg.replace(/\d+/g, '').trim();
+    var s = item.replace(seg, '').trim();
+    var shift = (s === ''? '0':s);
+    var location = {
+      seg: seg,
+      shift: shift
+    };
+    return location;
+  };
+  var segments = {
+    local: 'LCL',
+    argument: 'ARG',
+    this: 'THIS',
+    that: 'THAT',
+    temp: 'temp'
+  };
   clearedDArr.forEach((item) => {
     var translated;
-    if (item.indexOf('push') === -1 && item.indexOf('pop') === -1) {
+    if (item.indexOf('push') === -1 
+        && item.indexOf('pop') === -1) {
       translated = asmMap[item];
       if (order.hasOwnProperty(item)) {
         translated = insertOrder(translated, order[item]);
         order[item]++;
       };
-    } else if (item.indexOf('push') !== -1) {
-      var q = item.replace('push', '')
-                  .replace(/\s+/g, '')
-                  .replace('constant', '');
-      translated = insertNumber(asmMap['push'], q);
+    } else {
+      var l = msL(item);
+      if (item.indexOf('push') >= -1) {
+        if (l.seg === 'constant') {
+          t = asmMap['push']['constant'];
+          translated = [t.slice(0, 1), l.shift, t.slice(1)]
+                       .join('');
+        } else {
+          t = asmMap['push']['other'];
+          translated = [t.slice(0, 1), segments[l.seg], 
+                       t.slice(1, 6), l.shift, t.slice(6)]
+                         .join('');
+        } 
+      } else {
+        t = asmMap.pop;
+        translated = [t.slice(0, 18), l.seg, 
+          t.slice(18, 24), l.shift, t.slice(24)].join('');
+      }; 
     };
     translatedDArr.push(translated);
   });
-  console.log(translatedDArr);
+  var newHack = translatedDArr.join('\n');
+  fs.writeFile(__dirname + '/' + argv.f + '.asm', newHack, (err) => {
+  if (err) throw err;
+  console.log('File saved.')
+  })
 })
