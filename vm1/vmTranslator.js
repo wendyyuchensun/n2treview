@@ -1,11 +1,13 @@
-var argv = require('yargs').argv;
+// var argv = require('yargs').argv;
 var fs = require('fs');
 var readline = require('readline');
 var clear = require('./modules/clearer.js');
 var decode = require('./modules/decoder.js');
 
-function errorMessage (err) {
-  console.log(err);
+var order = {
+  eq: 0,
+  gt: 0,
+  lt: 0
 };
 
 var rl = readline.createInterface({
@@ -13,9 +15,10 @@ var rl = readline.createInterface({
 });
 
 rl.on('line', (command) => {
-  clear(command).then((clearedCommand) => {
-    decode(clearedcommand);
-  }, errorMessage(err)).then((decodedCommand) => {
-    
-  }, errorMessage(err))
+  var clearedCommand = clear(command);
+  var newOrder;
+  if (order.hasOwnProperty(clearedCommand)) {
+    newOrder = order[clearedCommand];
+  };
+  return decode(clearedCommand, newOrder);
 });
