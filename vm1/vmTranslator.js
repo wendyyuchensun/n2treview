@@ -23,10 +23,10 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
     lt: 0
   };
   function insertOrder (t, order) {
-    return [t.slice(0, 35), order, t.slice(35, 52),
-      order, t.slice(52, 68), order, t.slice(68, 83),
-      order, t.slice(83, 100), order, t.slice(100, 114),
-      order, t.slice(114, 129), order, t.slice(129)]
+    return [t.slice(0, 36), order, t.slice(36, 53),
+      order, t.slice(53, 69), order, t.slice(69, 84),
+      order, t.slice(84, 101), order, t.slice(101, 115),
+      order, t.slice(115, 130), order, t.slice(130)]
       .join('');
   };
   function insertNumber (t, num) {
@@ -46,13 +46,6 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
     };
     return location;
   };
-  var segments = {
-    local: 'LCL',
-    argument: 'ARG',
-    this: 'THIS',
-    that: 'THAT',
-    temp: 'temp'
-  };
   clearedDArr.forEach((item) => {
     var translated;
     if (item.indexOf('push') === -1 
@@ -65,27 +58,16 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
     } else {
       var l = msL(item);
       if (item.indexOf('push') >= -1) {
-        if (l.seg === 'constant') {
-          t = asmMap['push']['constant'];
-          translated = [t.slice(0, 1), l.shift, t.slice(1)]
-                       .join('');
-        } else {
-          t = asmMap['push']['other'];
-          translated = [t.slice(0, 1), segments[l.seg], 
-                       t.slice(1, 6), l.shift, t.slice(6)]
-                         .join('');
-        } 
+        translated = asmMap.push(l.seg, l.shift, argv.f.toLowerCase());
       } else {
-        t = asmMap.pop;
-        translated = [t.slice(0, 18), l.seg, 
-          t.slice(18, 24), l.shift, t.slice(24)].join('');
+        translated = asmMap.pusah(l.seg, l.shift, argv.f.toLowerCase());
       }; 
     };
     translatedDArr.push(translated);
   });
   var newHack = translatedDArr.join('\n');
   fs.writeFile(__dirname + '/' + argv.f + '.asm', newHack, (err) => {
-  if (err) throw err;
-  console.log('File saved.')
+    if (err) throw err;
+    console.log('File saved.')
   })
 })
