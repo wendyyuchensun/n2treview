@@ -23,8 +23,8 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
     lt: 0
   };
   function insertOrder (t, order) {
-    return [t.slice(0, 42), order, t.slice(42, 65),
-      order, t.slice(65, 69), order, t.slice(69, 84),
+    return [t.slice(0, 36), order, t.slice(36, 53),
+      order, t.slice(53, 69), order, t.slice(69, 84),
       order, t.slice(84, 101), order, t.slice(101, 115),
       order, t.slice(115, 130), order, t.slice(130)]
       .join('');
