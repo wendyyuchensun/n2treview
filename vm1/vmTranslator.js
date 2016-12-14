@@ -23,10 +23,9 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
     lt: 0
   };
   function insertOrder (t, order) {
-    return [t.slice(0, 36), order, t.slice(36, 53),
-      order, t.slice(53, 69), order, t.slice(69, 84),
-      order, t.slice(84, 101), order, t.slice(101, 115),
-      order, t.slice(115, 130), order, t.slice(130)]
+    return [t.slice(0, 36), order, t.slice(36, 65),
+      order, t.slice(65, 81), order, t.slice(81, 106),
+      order, t.slice(106)]
       .join('');
   };
   function msL (item) {
@@ -54,10 +53,10 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
       };
     } else {
       var l = msL(item);
-      if (item.indexOf('push') >= -1) {
+      if (item.indexOf('push') > -1) {
         translated = asmMap.push(l.seg, l.shift, argv.f.toLowerCase());
       } else {
-        translated = asmMap.push(l.seg, l.shift, argv.f.toLowerCase());
+        translated = asmMap.pop(l.seg, l.shift, argv.f.toLowerCase());
       }; 
     };
     translatedDArr.push(translated);
