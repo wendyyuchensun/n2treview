@@ -41,15 +41,18 @@ module.exports = {
     return '@SP\nA=M\nM=D\n@SP\nAM=M-1\n@' + label + '\nD;JNE'; 
   },
   createF: (name, lclNum) => {
-    var translated = this.label(name) + '\n';
-    var lcl = this.push(constant, 0);
+    var translated = '(' + name + ')';
+    var lcl = '@SP\nA=M\nM=0\n@SP\nM=M+1';
     for (i = 1; i <= lclNum; i++) {
-      translated.concat('\n').concat(lcl);
+      translated = translated.concat('\n').concat(lcl);
     };
     return translated;
   },
-  call: () => {
-      '@9/nD=A/n@SP/nD=M+D/nA=M/nM=D/n@SP/nM=M+1/n@LCL/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@ARG/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@THIS/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@THAT/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1
+  call: (func, num, returnOrder) => {
+    return '@' + returnOrder + '\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@SP\nD=M\n@' + num + '\nD=D-A\n@5\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@' + func + '\n0;JMP\n(return return' + returnOrder + ')';
+  },
+  returnF: () => {
+    return '@LCL\nD=M\n@5\nA=D-A\nD=M\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n\nD=A+1\n@SP\nM=D\n@LCL\nAM=M-1\nD=M\n@THAT\nM=D\n@LCL\nAM=M-1\nD=M\n@THIS\nM=D\n@LCL\nAM=M-1\nD=M\n@ARG\nM=D\n@LCL\nAM=M-1\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP'; 
   },
   push: (seg, shift, f) => {
     var t, s, translated
