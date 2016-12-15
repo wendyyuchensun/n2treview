@@ -48,6 +48,9 @@ module.exports = {
     };
     return translated;
   },
+  call: () => {
+      '@9/nD=A/n@SP/nD=M+D/nA=M/nM=D/n@SP/nM=M+1/n@LCL/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@ARG/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@THIS/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1/n@THAT/nD=M/n@SP/nA=M/nM=D/n@SP/nM=M+1
+  },
   push: (seg, shift, f) => {
     var t, s, translated
     switch (seg) {
