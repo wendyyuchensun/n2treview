@@ -21,6 +21,10 @@ var segments = (seg, shift) => {
   };
 };
 
+function createLabel (label, f) {
+  return f + '.' + label;
+};
+
 module.exports = {
   add: '@SP\nAM=M-1\nD=M\nA=A-1\nM=D+M',
   sub: '@SP\nAM=M-1\nD=M\nA=A-1\nM=M-D',
@@ -31,8 +35,19 @@ module.exports = {
   eq: '@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@EQ.true.\nD;JEQ\n@SP\nA=M-1\nM=0\n@EQ.end.\n0;JMP\n(EQ.true.)\n@SP\nA=M-1\nM=-1\n(EQ.end.)',
   gt: '@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@GT.true.\nD;JGT\n@SP\nA=M-1\nM=0\n@GT.end.\n0;JMP\n(GT.true.)\n@SP\nA=M-1\nM=-1\n(GT.end.)',
   lt: '@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@LT.true.\nD;JLT\n@SP\nA=M-1\nM=0\n@LT.end.\n0;JMP\n(LT.true.)\n@SP\nA=M-1\nM=-1\n(LT.end.)',
+  label: (label, f) => {
+    return '(' + createLabel(label, f) + ')';
+  },
+  goto: (label, f) => {
+    var label = createLabel(label, f);
+    return '@' + label + '\n0;JMP';
+  },
+  ifGoTo: (label, f) => {
+    var label = createLabel(label, f);
+    return '@SP\nA=M\nM=D\n@SP\nAM=M-1\n@' + label + '\nD;JNE'; 
+  },
   push: (seg, shift, f) => {
-    var t, s, translated;
+    var t, s, translated
     switch (seg) {
       case 'constant': 
         t = '@\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1';

@@ -10,7 +10,10 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
   // Clear unwanted parts
   var clearedDArr = [];
   dArr.forEach((item) => {
-    item = item.replace(/^\/\/.*/g, '').replace(/\r/g, '').trim();
+    item = item.replace(/^\/\/.*/g, '')
+      .replace(/\r/g, '')
+      .replace(/\/\/.*/g, '')
+      .trim();
     if (item) {
       clearedDArr.push(item);
     };
@@ -27,6 +30,13 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
       order, t.slice(65, 81), order, t.slice(81, 106),
       order, t.slice(106)]
       .join('');
+  };
+  function clearLabel (item) {
+    return item.replace('label', '')
+      .replace('goto', '')
+      .replace('if-', '')
+      .replace(/\s+/g, '')
+      .trim();
   };
   function msL (item) {
     item = item.replace('push', '')
@@ -45,11 +55,25 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
   clearedDArr.forEach((item) => {
     var translated;
     if (item.indexOf('push') === -1 
-        && item.indexOf('pop') === -1) {
+        && item.indexOf('pop') === -1 
+        && item.indexOf('label') === -1
+        && item.indexOf('goto') === -1) {
       translated = asmMap[item];
       if (order.hasOwnProperty(item)) {
         translated = insertOrder(translated, order[item]);
         order[item]++;
+      };
+    } else if (item.indexOf('label') > -1 
+        || item.indexOf('goto') > -1) {
+        var label = clearLabel(item);
+      if (item.indexOf('label') > -1) {
+        translated = asmMap.label(label, argv.f.toLowerCase());
+      } else {
+        if (item.indexOf('if') > -1) {
+          translated = asmMap.ifGoTo(label, argv.f.toLowerCase());
+        } else {
+          translated = asmMap.goto(label, argv.f.toLowerCase());  
+        } 
       };
     } else {
       var l = msL(item);
