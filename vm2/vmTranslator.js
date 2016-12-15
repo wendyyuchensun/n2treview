@@ -38,6 +38,18 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
       .replace(/\s+/g, '')
       .trim();
   };
+  function fInfo (item) {
+    item = item.replace('function', '')
+      .replace('call', '')
+      .trim();
+    var fName = item.replace(/\d+/g, '').trim();
+    var lclNum = item.replace(fName, '').trim();
+    var fInfo = {
+      name: fName,
+      lclNum: lclNum
+    };
+    return fInfo;
+  };
   function msL (item) {
     item = item.replace('push', '')
                .replace('pop', '')
@@ -54,28 +66,44 @@ fs.readFile(__dirname + '/' + argv.f + '.vm', (err, data) => {
   };
   clearedDArr.forEach((item) => {
     var translated;
-    if (item.indexOf('push') === -1 
-        && item.indexOf('pop') === -1 
-        && item.indexOf('label') === -1
-        && item.indexOf('goto') === -1) {
+    if (item.indexOf('push') !== 0 
+        && item.indexOf('pop') !== 0 
+        && item.indexOf('label') !== 0
+        && item.indexOf('goto') !== 0
+        && item.indexOf('if') !== 0
+        && item.indexOf('call') !== 0
+        && item.indexOf('function') !== 0
+        && item.indexOf('return') !== 0) {
       translated = asmMap[item];
       if (order.hasOwnProperty(item)) {
         translated = insertOrder(translated, order[item]);
         order[item]++;
       };
-    } else if (item.indexOf('label') > -1 
-        || item.indexOf('goto') > -1) {
+    } else if (item.indexOf('label') === 0 
+        || item.indexOf('goto') === 0
+        || item.indexOf('if') === 0) {
         var label = clearLabel(item);
-      if (item.indexOf('label') > -1) {
-        translated = asmMap.label(label, argv.f.toLowerCase());
+      if (item.indexOf('label') === 0) {
+        translated = asmMap.label(label);
       } else {
-        if (item.indexOf('if') > -1) {
-          translated = asmMap.ifGoTo(label, argv.f.toLowerCase());
+        if (item.indexOf('if') === 0) {
+          translated = asmMap.ifGoTo(label);
         } else {
-          translated = asmMap.goto(label, argv.f.toLowerCase());  
+          translated = asmMap.goto(label);  
         } 
       };
-    } else {
+    } else if (item.indexOf('call') === 0
+        || item.indexOf('function') === 0
+        || item.indexOf('return') === 0) {
+     if (item.indexOf('function') === 0)  {
+       var fInfo = fInfo(item);
+       translated = asmMap.createF(fInfo.name, fInfo.lclNum);
+     } else if (item.indexOf('return') === 0) {
+        var 
+     } else {
+     
+     };
+    }else {
       var l = msL(item);
       if (item.indexOf('push') > -1) {
         translated = asmMap.push(l.seg, l.shift, argv.f.toLowerCase());
