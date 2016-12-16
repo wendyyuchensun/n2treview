@@ -20,10 +20,10 @@ function fInfo (item) {
     .replace('call', '')
     .trim();
   var fName = item.replace(/\d+/g, '').trim();
-  var lclNum = item.replace(fName, '').trim();
+  var num = item.replace(fName, '').trim();
   var fInfo = {
     name: fName,
-    lclNum: lclNum
+    num: parseInt(num)
   };
   return fInfo;
 };
@@ -45,83 +45,81 @@ var returnOrder = 0;
 // Open file and turn it into an array
 // with every line made into a seperate item
 function readSingleFile (fileName) {
-  fs.readFile(__dirname + '/' + fileName + '.vm', (err, data) => {
-      if (err) throw err;
-    var dArr = data.toString().split(/\n/);
-    // Clear unwanted parts
-    var clearedDArr = [];
-    dArr.forEach((item) => {
-      item = item.replace(/^\/\/.*/g, '')
-        .replace(/\r/g, '')
-        .replace(/\/\/.*/g, '')
-        .trim();
-      if (item) {
-        clearedDArr.push(item);
-      };
-    });
-    // Translate
-    var translatedDArr = [];
-    var order = {
-      eq: 0,
-      gt: 0,
-      lt: 0
+  var d = fs.readFileSync(__dirname + '/' + fileName + '.vm');
+  var dArr = d.toString().split(/\n/);
+  // Clear unwanted parts
+  var clearedDArr = [];
+  dArr.forEach((item) => {
+    item = item.replace(/^\/\/.*/g, '')
+      .replace(/\r/g, '')
+      .replace(/\/\/.*/g, '')
+      .trim();
+    if (item !== '') {
+      clearedDArr.push(item);
     };
-    clearedDArr.forEach((item) => {
-      var translated;
-      if (item.indexOf('push') !== 0 
-          && item.indexOf('pop') !== 0 
-          && item.indexOf('label') !== 0
-          && item.indexOf('goto') !== 0
-          && item.indexOf('if') !== 0
-          && item.indexOf('call') !== 0
-          && item.indexOf('function') !== 0
-          && item.indexOf('return') !== 0) {
-        translated = asmMap[item];
-        if (order.hasOwnProperty(item)) {
-          translated = insertOrder(translated, order[item]);
-          order[item]++;
-        };
-      } else if (item.indexOf('label') === 0 
-          || item.indexOf('goto') === 0
-          || item.indexOf('if') === 0) {
-          var label = clearLabel(item);
-        if (item.indexOf('label') === 0) {
-          translated = asmMap.label(label);
-        } else {
-          if (item.indexOf('if') === 0) {
-            translated = asmMap.ifGoTo(label);
-          } else {
-            translated = asmMap.goto(label);  
-          } 
-        };
-      } else if (item.indexOf('call') === 0
-          || item.indexOf('function') === 0
-          || item.indexOf('return') === 0) {
-       var f = fInfo(item);
-       if (item.indexOf('function') === 0)  {
-         translated = asmMap.createF(f.name, f.lclNum);
-       } else if (item.indexOf('call') === 0) {
-	      translated = asmMap.call(f.name, parseInt(f.lclNum),
-             returnOrder);
-         returnOrder++; 
-       } else {
-         translated = asmMap.returnF();
-       };
-      }else {
-        var l = msL(item);
-        if (item.indexOf('push') > -1) {
-          translated = asmMap
-            .push(l.seg, l.shift, argv.f.toLowerCase());
-        } else {
-          translated = asmMap
-            .pop(l.seg, l.shift, argv.f.toLowerCase());
-        }; 
-      };
-      translatedDArr.push(translated);
-    });
-    var newHack = translatedDArr.join('\n');
-    return newHack;
   });
+  // Translate
+  var translatedDArr = [];
+  var order = {
+    eq: 0,
+    gt: 0,
+    lt: 0
+  };
+  var newHck;
+  clearedDArr.forEach((item) => {
+    var translated;
+    if (item.indexOf('push') !== 0 
+        && item.indexOf('pop') !== 0 
+        && item.indexOf('label') !== 0
+        && item.indexOf('goto') !== 0
+        && item.indexOf('if') !== 0
+        && item.indexOf('call') !== 0
+        && item.indexOf('function') !== 0
+        && item.indexOf('return') !== 0) {
+      translated = asmMap[item];
+      if (order.hasOwnProperty(item)) {
+        translated = insertOrder(translated, order[item]);
+        order[item]++;
+      };
+    } else if (item.indexOf('label') === 0 
+        || item.indexOf('goto') === 0
+        || item.indexOf('if') === 0) {
+        var label = clearLabel(item);
+      if (item.indexOf('label') === 0) {
+        translated = asmMap.label(label);
+      } else {
+        if (item.indexOf('if') === 0) {
+          translated = asmMap.ifGoTo(label);
+        } else {
+          translated = asmMap.goto(label);  
+        } 
+      };
+    } else if (item.indexOf('call') === 0
+        || item.indexOf('function') === 0
+        || item.indexOf('return') === 0) {
+     var f = fInfo(item);
+     if (item.indexOf('function') === 0)  {
+       translated = asmMap.createF(f.name, f.num);
+     } else if (item.indexOf('call') === 0) {
+       translated = asmMap.call(f.name, f.num, returnOrder);
+       returnOrder++; 
+     } else {
+       translated = asmMap.returnF();
+     };
+    } else {
+      var l = msL(item);
+      if (item.indexOf('push') > -1) {
+        translated = asmMap
+          .push(l.seg, l.shift, argv.f.toLowerCase());
+      } else {
+        translated = asmMap
+          .pop(l.seg, l.shift, argv.f.toLowerCase());
+      }; 
+    };
+    translatedDArr.push(translated);
+    newHack = translatedDArr.join('\n');
+  });
+  return newHack;
 };
 
 //  Main function begins with detecting if the input
@@ -135,23 +133,23 @@ var bootstrap = () => {
   return b;
 };
 if (argv.f.indexOf('.vm') === -1) {
-  fs.readdir (__dirname + '/' + argv.f, (err, files) => {
-    files.forEach((item) => {
-      if (item.indexOf('.vm') > -1) {
-        item = item.replace('.vm', '').trim();
-        neededFiles.push(item);
-      };
-    });
-    neededFiles.forEach((item) => {
-      var fName = argv.f + '/' + item;
-      console.log(fName);
-      translatedFiles.push(readSingleFile(fName));
-    });
-    translatedFiles.splice(0, 0, bootstrap()); 
+  translatedFiles.push(bootstrap());
+  files = fs.readdirSync ('./' + argv.f);
+  files.forEach((item) => {
+    if (item.indexOf('.vm') > -1) {
+      item = item.replace('.vm', '').trim();
+      neededFiles.push(item);
+    };
+  });
+  neededFiles.forEach((item) => {
+    var fName = argv.f + '/' + item;
+    var newHack = readSingleFile(fName);
+    translatedFiles.push(newHack);
+    translatedFiles = translatedFiles.join('\n');
   });
 } else {
   var fName = argv.f.replace('.vm', '').trim();
-  translatedFiles.push(readSingleFile(argv.f));
+  translatedFiles = translatedFiles.push(readSingleFile(fName));
 };
 fs.writeFile(__dirname + '/' + argv.f + '.asm', 
     translatedFiles, (err) => {
