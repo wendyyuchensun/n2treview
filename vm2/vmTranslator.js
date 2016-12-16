@@ -101,9 +101,9 @@ function readSingleFile (fileName) {
        if (item.indexOf('function') === 0)  {
          translated = asmMap.createF(f.name, f.lclNum);
        } else if (item.indexOf('call') === 0) {
-         translated = asmMap.call(f.name, parseInt(f.lclNum),
+	      translated = asmMap.call(f.name, parseInt(f.lclNum),
              returnOrder);
-         returnOrder++;  
+         returnOrder++; 
        } else {
          translated = asmMap.returnF();
        };
@@ -144,6 +144,7 @@ if (argv.f.indexOf('.vm') === -1) {
     });
     neededFiles.forEach((item) => {
       var fName = argv.f + '/' + item;
+      console.log(fName);
       translatedFiles.push(readSingleFile(fName));
     });
     translatedFiles.splice(0, 0, bootstrap()); 
