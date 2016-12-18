@@ -19,7 +19,7 @@ function fInfo (item) {
   item = item.replace('function', '')
     .replace('call', '')
     .trim();
-  var fName = item.replace(/\d+/g, '').trim();
+  var fName = item.replace(/\s+\d+/g, '').trim();
   var num = item.replace(fName, '').trim();
   var fInfo = {
     name: fName,
@@ -108,15 +108,17 @@ function readSingleFile (fileName) {
      };
     } else {
       var l = msL(item);
+      var file = fileName.replace(/^.*\//, '').trim();
       if (item.indexOf('push') > -1) {
         translated = asmMap
-          .push(l.seg, l.shift, argv.f.toLowerCase());
+          .push(l.seg, l.shift, file.toLowerCase());
       } else {
         translated = asmMap
-          .pop(l.seg, l.shift, argv.f.toLowerCase());
+          .pop(l.seg, l.shift, file.toLowerCase());
       }; 
     };
-    translatedDArr.push(translated);
+    translatedDArr.push('// ' + fileName + ': ' + item + '\n' 
+        + translated);
     newHack = translatedDArr.join('\n');
   });
   return newHack;
@@ -127,7 +129,7 @@ function readSingleFile (fileName) {
 var translatedFiles = [];
 var neededFiles = [];
 var bootstrap = () => {
-  var b = '@256\nD=A\n@SP\nM=D\n' + 
+  var b = '// boostrap\n@256\nD=A\n@SP\nM=D\n' + 
     asmMap.call('Sys.init', 0, returnOrder);
   returnOrder++;
   return b;
@@ -145,12 +147,13 @@ if (argv.f.indexOf('.vm') === -1) {
     var fName = argv.f + '/' + item;
     var newHack = readSingleFile(fName);
     translatedFiles.push(newHack);
-    translatedFiles = translatedFiles.join('\n');
   });
 } else {
   var fName = argv.f.replace('.vm', '').trim();
-  translatedFiles = translatedFiles.push(readSingleFile(fName));
+  var newHack = readSingleFile(fName);
+  translatedFiles.push(newHack);
 };
+translatedFiles = translatedFiles.join('\n');
 fs.writeFile(__dirname + '/' + argv.f + '.asm', 
     translatedFiles, (err) => {
   if (err) throw err;
