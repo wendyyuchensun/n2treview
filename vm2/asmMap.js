@@ -38,7 +38,7 @@ module.exports = {
     return '@' + label + '\n0;JMP';
   },
   ifGoTo: (label) => {
-    return '@SP\nA=M\nM=D\n@SP\nAM=M-1\n@' + label + '\nD;JNE'; 
+    return '@SP\nAM=M-1\nD=M\n@' + label + '\nD;JNE'; 
   },
   createF: (name, lclNum) => {
     var translated = '(' + name + ')';

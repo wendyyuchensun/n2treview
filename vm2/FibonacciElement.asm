@@ -95,10 +95,8 @@ M=-1
 (LT.end.0)
 // FibonacciElement/Main: if-goto IF_TRUE
 @SP
-A=M
-M=D
-@SP
 AM=M-1
+D=M
 @IF_TRUE
 D;JNE
 // FibonacciElement/Main: goto IF_FALSE
