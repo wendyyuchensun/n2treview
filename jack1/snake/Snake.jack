@@ -17,9 +17,9 @@ class Snake {
     let y2 = blockW - margin;
     
     while (length > 0) {
+			let x2 = snake[length] * blockW - margin;
       let length = length - 1;
-      let x1 = snake[length] + margin;
-      let x2 = snake[length] + blockW - margin;
+      let x1 = snake[length] * blockW + margin;
       do Screen.drawRectangle(x1, margin, x2, y2);
     }
     return;
