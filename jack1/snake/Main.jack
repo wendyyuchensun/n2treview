@@ -1,3 +1,7 @@
 class Main {
-  
+  function void main() {
+    var SnakeGame game;
+    let game = SnakeGame.new();
+    return;
+  }
 }

@@ -1,0 +1,27 @@
+class Snake {
+  field Array snake;
+  
+  constructor Snake init(int length) {
+    let snake = Array.new(length);
+    while (length > 0) {
+      let length = length - 1;
+      let snake[length] = length;
+    }
+    return this;
+  }
+
+  method void drawSnake (length) {
+    var int blockW, margin;
+    var int x1, x2, y2;
+    let blockW = 10, margin = 1;
+    let y2 = blockW - margin;
+    
+    while (length > 0) {
+      let length = length - 1;
+      let x1 = snake[length] + margin;
+      let x2 = snake[length] + blockW - margin;
+      do Screen.drawRectangle(x1, margin, x2, y2);
+    }
+    return;
+  } 
+}

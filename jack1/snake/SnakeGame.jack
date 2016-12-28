@@ -1,0 +1,12 @@
+class SnakeGame {
+  field Snake snake;
+  static int length;
+  let length = 7;
+
+  constructor SnakeGame new() {
+    let snake = Snake.init(length);
+    do snake.drawSnake(length); 
+    return this;
+  }
+}
+
