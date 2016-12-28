@@ -3,7 +3,8 @@ class SnakeGame {
 
   constructor SnakeGame new() {
     let snake = Snake.init();
-    do snake.drawSnake(); 
+    do snake.drawSnake();
+    do snake.printL(); 
     return this;
   }
 }

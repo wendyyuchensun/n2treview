@@ -16,16 +16,24 @@ class Snake {
   method void drawSnake () {
     var int blockW, margin;
     var int x1, x2, y2;
+    var int tmpL;
     let blockW = 10;
     let margin = 1;
     let y2 = blockW - margin;
-    
+    let tmpL = l;  
+  
     while (l > 0) {
 		  let l = l - 1;	
       let x1 = snake[l] * blockW + margin;
       let x2 = snake[l] * blockW + blockW - margin;
       do Screen.drawRectangle(x1, margin, x2, y2);
     }
+    
+    let l = tmpL;
     return;
+  }
+
+  method void printL () {
+    do Output.printInt(l);
   } 
 }
