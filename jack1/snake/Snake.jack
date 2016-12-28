@@ -32,8 +32,4 @@ class Snake {
     let l = tmpL;
     return;
   }
-
-  method void printL () {
-    do Output.printInt(l);
-  } 
 }
