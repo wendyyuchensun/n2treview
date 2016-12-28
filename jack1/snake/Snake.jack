@@ -1,25 +1,29 @@
 class Snake {
   field Array snake;
-  
-  constructor Snake init(int length) {
-    let snake = Array.new(length);
-    while (length > 0) {
-      let length = length - 1;
-      let snake[length] = length;
+  field int l;  
+
+  constructor Snake init() {
+    let l = 7;
+    let snake = Array.new(l);
+    while (l > 0) {
+      let l = l - 1;
+      let snake[l] = l;
     }
+    let l = 7;
     return this;
   }
 
-  method void drawSnake (length) {
+  method void drawSnake () {
     var int blockW, margin;
     var int x1, x2, y2;
-    let blockW = 10, margin = 1;
+    let blockW = 10;
+    let margin = 1;
     let y2 = blockW - margin;
     
-    while (length > 0) {
-			let x2 = snake[length] * blockW - margin;
-      let length = length - 1;
-      let x1 = snake[length] * blockW + margin;
+    while (l > 0) {
+		  let l = l - 1;	
+      let x1 = snake[l] * blockW + margin;
+      let x2 = snake[l] * blockW + blockW - margin;
       do Screen.drawRectangle(x1, margin, x2, y2);
     }
     return;
