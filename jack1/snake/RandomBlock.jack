@@ -1,0 +1,50 @@
+class RandomBlock {
+  field Block randomBlock;
+  field int xIndex, yIndex;
+  static int seed;
+
+  function void init(int newSeed) {
+    let seed = newSeed;
+    return;
+  }
+  function int rand() {
+    let seed = seed + 20251;
+    if (seed < 0) {
+      let seed = seed - 32767 - 1;
+    }
+    return seed;
+  }
+  function int randRange(int range) {
+    var int mask;
+    var int ret;
+    let mask = 1;
+    while (mask < range) {
+      let mask = mask * 2 + 1;
+    }
+    let ret = RandomBlock.rand() & mask;
+    while (ret > range) {
+      let ret = RandomBlock.rand() & mask;
+    }
+    return ret;
+  }
+  constructor RandomBlock new() {
+    let xIndex = RandomBlock.randRange(49);
+    let yIndex = RandomBlock.randRange(24);
+    let randomBlock = Block.new(xIndex, yIndex);
+    return this;
+  }
+  method void printRandomBlockIndex() {
+    // This is mainly for debugging
+    do Output.printString("(");
+    do Output.printInt(xIndex);
+    do Output.printString(",");
+    do Output.printInt(yIndex);
+    do Output.printString(")");
+    do Output.println();
+    return; 
+  }
+  method void drawRandomBlock() {
+    do randomBlock.drawBlock(10, 1);
+    return;
+  }
+}

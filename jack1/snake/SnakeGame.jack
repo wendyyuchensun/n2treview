@@ -1,11 +1,17 @@
 class SnakeGame {
   field Snake snake;
+  field RandomBlock randomBlock;
   field char direction;
 
   constructor SnakeGame new() {
     let snake = Snake.init(7);
     let direction = 1;
     do snake.drawSnake();
+   
+    do RandomBlock.init(100); 
+    let randomBlock = RandomBlock.new();
+    do randomBlock.drawRandomBlock();    
+ 
     do Sys.wait(1500);
     return this;
   }
