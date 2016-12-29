@@ -1,0 +1,53 @@
+class Block {
+  field int xIndex, yIndex;
+  constructor Block new(int x, int y) {
+    let xIndex = x;
+    let yIndex = y;
+    return this;
+  }
+  method void changeIndex(int newX, int newY) {
+    let xIndex = newX;
+    let yIndex = newY;
+    return;
+  }
+  method void passIndex(Block destinationBlock) {
+    do destinationBlock.changeIndex(xIndex, yIndex);
+    return;
+  }
+  method void turnRight() {
+    let xIndex = xIndex + 1;
+    return;
+  }
+  method void turnLeft() {
+    let xIndex = xIndex - 1;
+    return;
+  }
+  method void turnUp() {
+    let yIndex = yIndex - 1;
+    return;
+  }
+  method void turnDown() {
+    let yIndex = yIndex + 1;
+    return;
+  }
+  method void printBlockIndex() { 
+    // This method is mainly for debugging
+    do Output.printString("(");
+    do Output.printInt(xIndex);
+    do Output.printString(",");
+    do Output.printInt(yIndex);
+    do Output.printString(")");
+    do Output.println();
+    return; 
+  }
+  method void drawBlock(int blockW, int margin) {
+    var int x1, y1, x2, y2;
+    let x1 = xIndex * blockW + margin;
+    let y1 = yIndex * blockW + margin;
+    let x2 = xIndex * blockW + blockW - margin;
+    let y2 = yIndex * blockW + blockW - margin;
+    do Screen.setColor(true);
+    do Screen.drawRectangle(x1, y1, x2, y2);
+    return;
+  }
+}

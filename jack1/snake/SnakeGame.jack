@@ -1,10 +1,37 @@
 class SnakeGame {
   field Snake snake;
+  field char direction;
 
   constructor SnakeGame new() {
-    let snake = Snake.init();
+    let snake = Snake.init(7);
+    let direction = 1;
     do snake.drawSnake();
+    do Sys.wait(1500);
     return this;
+  }
+  method void decideDirection() {
+    var char key;
+    let key = Keyboard.keyPressed();
+    if (~(key = 0)) {
+      if (key = 132) {let direction = 1;}
+      if (key = 130) {let direction = 2;}
+      if (key = 131) {let direction = 3;}
+      if (key = 133) {let direction = 4;}
+    }
+    return;
+  } 
+  method void run() {
+    var boolean exit;
+    let exit = false;
+    while (~exit) {
+      do snake.moveBody();
+      do decideDirection();
+      do snake.turn(direction);
+      do Sys.wait(1500);
+      do snake.drawSnake();
+      do Sys.wait(1500);
+    }
+    return;
   }
 }
 

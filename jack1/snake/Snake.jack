@@ -1,35 +1,72 @@
 class Snake {
-  field Array snake;
-  field int l;  
-
-  constructor Snake init() {
-    let l = 7;
-    let snake = Array.new(l);
+  field Array snakeBody;
+  field int l; 
+ 
+  constructor Snake init(int length) {
+    var Block block;
+    let l = length;
+    let snakeBody = Array.new(7);
     while (l > 0) {
       let l = l - 1;
-      let snake[l] = l;
+      let block = Block.new(l, 0);
+      let snakeBody[l] = block;
     }
     let l = 7;
     return this;
   }
-
-  method void drawSnake () {
-    var int blockW, margin;
-    var int x1, x2, y2;
-    var int tmpL;
-    let blockW = 10;
-    let margin = 1;
-    let y2 = blockW - margin;
-    let tmpL = l;  
-  
-    while (l > 0) {
-		  let l = l - 1;	
-      let x1 = snake[l] * blockW + margin;
-      let x2 = snake[l] * blockW + blockW - margin;
-      do Screen.drawRectangle(x1, margin, x2, y2);
+  method void moveBody() {
+    var int i;
+    var Block currentBlock, nextBlock;
+    var int newX, newY;
+    let i = 0;
+    while (i + 1 < l) {
+      let currentBlock = snakeBody[i];
+      let nextBlock = snakeBody[i + 1];
+      do nextBlock.passIndex(currentBlock);
+      let i = i + 1;
     }
-    
-    let l = tmpL;
+    return; 
+  }
+  method void turn(char direction) {
+    var Block tmpBlock;
+    let tmpBlock = snakeBody[l - 1];
+    if (direction = 1) {
+      do tmpBlock.turnRight(); 
+    }
+    if (direction = 2) {
+      do tmpBlock.turnLeft(); 
+    }
+    if (direction = 3) {
+      do tmpBlock.turnUp(); 
+    }
+    if (direction = 4) {
+      do tmpBlock.turnDown(); 
+    }
+    return;
+  }
+  method void printSnakeIndex() {
+    //  This method is mainly for debugging
+    var int tmpL;
+    var Block tmpBlock;
+    let tmpL = l;
+    do Screen.clearScreen();
+    while (tmpL > 0) {
+      let tmpL = tmpL - 1;
+      let tmpBlock = snakeBody[tmpL];
+      do tmpBlock.printBlockIndex();
+    }
+    return;
+  }
+  method void drawSnake() {
+    var int tmpL;
+    var Block tmpBlock;
+    let tmpL = l;
+    do Screen.clearScreen();
+    while (tmpL > 0) {
+      let tmpL = tmpL - 1;
+      let tmpBlock = snakeBody[tmpL];
+      do tmpBlock.drawBlock(10, 1);
+    }
     return;
   }
 }
