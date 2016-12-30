@@ -58,22 +58,25 @@ class SnakeGame {
       let randBlock = snake[l];
       let randX = randBlock.getX();
       let randY = randBlock.getY();
-      if (key = 132) {
+      if ((key = 132) & ~(currentDir = 2)) {
         let currentDir = 1;
         let headX = headX + 1;
       }
-      if (key = 130) {
+      if ((key = 130) & ~(currwntDir = 1)) {
         let currentDir = 2;
         let headX = headX - 1;
       }
-      if (key = 131) {
+      if ((key = 131) & ~(currentDir = 4)) {
         let currentDir = 3;
         let headY = headY + 1;
       }
-      if (key = 133) {
+      if ((key = 133) & ~(currentDir = 3)) {
         let currentDir = 4;
         let headY = headY - 1;
       }
+			if (l = 25) {
+				let terminated = true;
+			}
 			if ((headX > 49) | (headY > 24)) {
 				// bump the wall
 				let terminated = true;
