@@ -1,0 +1,50 @@
+class Block {
+  field int xIndx, yIndx;
+  constructor Block new(int x, int y) {
+    let xIndx = x;
+    let yIndx = y;
+    return this;
+  }
+  method int getX() {
+    return xIndx;
+  }
+  method int getY() {
+    return yIndx;
+  }
+  method void moveRight() {
+    let xIndx = xIndx + 1;
+    return;
+  }
+  method void moveLeft() {
+    let xIndx = xIndx - 1;
+    return;
+  }
+  method void moveUp() {
+    let yIndx = yIndx - 1;
+    return;
+  }
+  method void moveDown() {
+    let yIndx = yIndx + 1;
+    return;
+  }
+  method void drawBlock(int blockW, int margin) {
+    var int x1, y1, x2, y2;
+    let x1 = xIndx * blockW + margin;
+    let y1 = yIndx * blockW + margin;
+    let x2 = xIndx * blockW + blockW - margin;
+    let y2 = yIndx * blockW + blockW - margin;
+    do Screen.setColor(true);
+    do Screen.drawRectangle(x1, y1, x2, y2);
+    return;
+  }
+  // printIndx is mainly for debugging
+  method void printIndx() {
+    do Output.printString("(");
+    do Output.printInt(xIndx);
+    do Output.printString(",");
+    do Output.printInt(yIndx);
+    do Output.printString(")");
+    do Output.println();
+    return;
+  }
+}

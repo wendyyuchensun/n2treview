@@ -1,0 +1,26 @@
+class Rand {
+  static int seed;
+  function void setSeed(int newSeed) {
+    let seed = newSeed;
+    return;
+  }
+  function int rand() {
+    let seed = seed + 20251;
+    if (seed < 0) {
+      let seed = seed - 32767 - 1;
+    }
+    return seed;
+  }
+  function int randRange(int range) {
+    var int mask, ret;
+    let mask = 1;
+    while (mask < range) {
+      let mask = mask * 2 + 1;
+    }
+    let ret = Rand.rand() & mask;
+    if (ret > range) {
+      let ret = Rand.rand() & mask;
+    }
+    return ret;
+  }
+}
