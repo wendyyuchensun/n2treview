@@ -74,6 +74,10 @@ class SnakeGame {
         let currentDir = 4;
         let headY = headY - 1;
       }
+			if ((headX > 49) | (headY > 24)) {
+				// bump the wall
+				let terminated = true;
+			}
       if ((headX = randX) & (headY = randY)) {
         // when snake reaches the target rand block
         // make the snake 1 block longeret l = l + 1;
