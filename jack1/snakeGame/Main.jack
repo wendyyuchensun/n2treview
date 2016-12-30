@@ -1,7 +1,3 @@
 class Main {
-  function void main() {
-    do SnakeGame.new();
-    do SnakeGame.moveSnake();
-    return;
-  }
+
 }
