@@ -2,8 +2,7 @@ class Snake {
   function boolean returnMatched(Array snake, int l) {
     var boolean matched;
     var int i;
-    var Block tmpBlock;
-    var Block randBlock;
+    var Block tmpBlock, randBlock;
     var int tmpX, tmpY, randX, randY;
     let matched = false;
     let i = 0;
@@ -32,7 +31,7 @@ class Snake {
       let snake[i] = Block.new(i, 0);
       let i = i + 1;
     }
-    do Rand.setSeed(20);
+    do Rand.setSeed(23);
     let randX = Rand.randRange(49);
     let randY = Rand.randRange(24);
     let snake[i] = Block.new(randX, randY);
@@ -47,9 +46,13 @@ class Snake {
     }
     return snake;
   }
+  function void disposeSnake(Array snake) {
+    do Memory.deAlloc(snake);
+    return;
+  }
   function Array addBlock(int previousL, Array previousSnake) {
     var Array newSnake;
-    var int i, newL, newArrayL, randX, randY;
+    var int i, newL, newArrayL, randX, randY, randSeed;
     var boolean matched;
     let newL = previousL + 1;
     let newArrayL = newL + 1;
@@ -59,17 +62,20 @@ class Snake {
       let newSnake[i] = previousSnake[i];
       let i = i + 1;
     }
+    do Snake.disposeSnake(previousSnake);
     let randX = Rand.randRange(49);
     let randY = Rand.randRange(24);
     let newSnake[newL] = Block.new(randX, randY);
     let matched = Snake.returnMatched(newSnake, newL);
-    do Rand.setSeed(randX + randY);
+    let randSeed = Rand.rand();
+    do Rand.setSeed(randSeed);
     while (matched) {
       let randX = Rand.randRange(49);
       let randY = Rand.randRange(24);
       let newSnake[newL] = Block.new(randX, randY);
       let matched = Snake.returnMatched(newSnake, newL);
-    	do Rand.setSeed(randX + randY);
+      let randSeed = Rand.rand();
+      do Rand.setSeed(randSeed);
     }
     return newSnake;
   } 

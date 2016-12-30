@@ -27,10 +27,6 @@ class SnakeGame {
     return init;
   }
   
-  function void dispose(Array item) {
-    do Memory.deAlloc(item);
-    return;     
-  } 
   // initialize a new 7-block snake 
   function void new() {
     let l = 7;
@@ -62,7 +58,7 @@ class SnakeGame {
         let currentDir = 1;
         let headX = headX + 1;
       }
-      if ((key = 130) & ~(currwntDir = 1)) {
+      if ((key = 130) & ~(currentDir = 1)) {
         let currentDir = 2;
         let headX = headX - 1;
       }
@@ -74,19 +70,10 @@ class SnakeGame {
         let currentDir = 4;
         let headY = headY - 1;
       }
-			if (l = 25) {
-				let terminated = true;
-			}
-			if ((headX > 49) | (headY > 24)) {
-				// bump the wall
-				let terminated = true;
-			}
       if ((headX = randX) & (headY = randY)) {
         // when snake reaches the target rand block
         // make the snake 1 block longeret l = l + 1;
-        let newSnake = Snake.addBlock(l, snake);
-				do SnakeGame.dispose(snake);
-        let snake = newSnake;
+        let snake = Snake.addBlock(l, snake);
         let l = l + 1;
       } else {
         do Snake.moveBody(l, snake);

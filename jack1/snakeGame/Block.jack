@@ -39,12 +39,19 @@ class Block {
   }
   // printIndx is mainly for debugging
   method void printIndx() {
-    do Output.printString("(");
+    var String uParam, comma, lParam;
+    let uParam = "(";
+    let comma = ",";
+    let lParam = "(";
+    do Output.printString(uParam);
     do Output.printInt(xIndx);
-    do Output.printString(",");
+    do Output.printString(comma);
     do Output.printInt(yIndx);
-    do Output.printString(")");
+    do Output.printString(lParam);
     do Output.println();
+    do uParam.dispose();
+    do comma.dispose();
+    do lParam.dispose();
     return;
   }
 }
