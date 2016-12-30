@@ -78,6 +78,7 @@ class SnakeGame {
         // when snake reaches the target rand block
         // make the snake 1 block longeret l = l + 1;
         let newSnake = Snake.addBlock(l, snake);
+				do SnakeGame.dispose(snake);
         let snake = newSnake;
         let l = l + 1;
       } else {

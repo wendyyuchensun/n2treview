@@ -37,11 +37,13 @@ class Snake {
     let randY = Rand.randRange(24);
     let snake[i] = Block.new(randX, randY);
     let matched = Snake.returnMatched(snake, l);
+		do Rand.setSeed(randX + randY);
     while (matched) {
       let randX = Rand.randRange(49);
       let randY = Rand.randRange(24);
       let snake[i] = Block.new(randX, randY);
       let matched = Snake.returnMatched(snake, l);
+			do Rand.setSeed(randX + randY);
     }
     return snake;
   }
@@ -57,16 +59,17 @@ class Snake {
       let newSnake[i] = previousSnake[i];
       let i = i + 1;
     }
-    do Rand.setSeed(30);
     let randX = Rand.randRange(49);
     let randY = Rand.randRange(24);
     let newSnake[newL] = Block.new(randX, randY);
     let matched = Snake.returnMatched(newSnake, newL);
+    do Rand.setSeed(randX + randY);
     while (matched) {
       let randX = Rand.randRange(49);
       let randY = Rand.randRange(24);
       let newSnake[newL] = Block.new(randX, randY);
       let matched = Snake.returnMatched(newSnake, newL);
+    	do Rand.setSeed(randX + randY);
     }
     return newSnake;
   } 
