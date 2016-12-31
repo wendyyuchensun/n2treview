@@ -1,3 +1,29 @@
 class Snake {
-
+  field int length;
+  field Array body;
+ 
+  constructor Snake init(int l) {
+    let length = l;
+    let body = Body.init(length);
+    return this;
+  }
+  method void dispose() {
+    do Body.dispose(body, length);
+    do body.dispose();
+    do Memory.deAlloc(this);
+    return; 
+  }
+  method void drawSnake() {
+    do Body.drawBody(body, length);
+    return;
+  }
+  method void moveSnake() {
+    do Body.moveBody(body, length, 1);
+    return; 
+  }
+  // debug
+  method void printSnakeIndxs () {
+    do Body.printBodyIndxs(body, length);
+    return;
+  }
 }

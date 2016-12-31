@@ -1,3 +1,12 @@
 class Main {
-
+  function void main() {
+    var View view;
+    let view = View.init(11, 7);
+    do view.printViewIndxs();
+    do Sys.wait(10000);
+    do view.moveView();
+    do view.printViewIndxs();
+    do view.dispose();
+    return;
+  }
 }

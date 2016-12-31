@@ -1,0 +1,54 @@
+class Body {
+  function Array init(int l) {
+    var int i;
+    var Array body;
+    let i = 0;
+    let body = Array.new(l);
+    while (i < l) {
+      let body[i] = Block.new(i, 0);
+      let i = i + 1;
+    }
+    return body;
+  }
+  function void dispose(Array body, int l) {
+    var int i;
+    let i = 0;
+    while (i < l) {
+      do Block.dispose(body[i]);
+      let i = i + 1;
+    }
+    do body.dispose();
+    return;
+  }
+  function void drawBody(Array body, int l) {
+    var int i;
+    let i = 0;
+    while (i < l) {
+      do Block.drawBodyBlock(body[i], 10, 1);
+      let i = i + 1;
+    } 
+    return;
+  }
+  function void moveBody(Array body, int l, int dir) {
+    var int i, nextI, headBlockIndx;
+    let headBlockIndx = l - 1;
+    let i = 0;
+    while (i < headBlockIndx) {
+      let nextI = i + 1; 
+      do Block.passIndxsBetween(body[nextI], body[i]);
+      let i = i + 1;
+    }
+    do Block.moveHeadBlock(body[headBlockIndx], dir);
+    return;
+  }
+  // debug
+  function void printBodyIndxs(Array body, int l) {
+    var int i;
+    let i = 0;
+    while (i < l) {
+      do Block.printIndxs(body[i]); 
+      let i = i + 1;
+    }
+    return;
+  }
+}
