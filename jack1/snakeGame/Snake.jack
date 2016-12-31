@@ -1,136 +1,29 @@
 class Snake {
-  function boolean returnMatched(Array snake, int l) {
-    var boolean matched;
-    var int i;
-    var Block tmpBlock, randBlock;
-    var int tmpX, tmpY, randX, randY;
-    let matched = false;
-    let i = 0;
-    let randBlock = snake[l];
-    let randX = randBlock.getX();
-    let randY = randBlock.getY();
-    while (i < l) {
-      let tmpBlock = snake[i];
-      let tmpX = tmpBlock.getX();
-      let tmpY = tmpBlock.getY();
-      if ((tmpX = randX) & (tmpY = randY)) {
-        let matched = true;
-      }
-      let i = i + 1;
-    }
-    return matched;  
+  field int length;
+  field Array body;
+ 
+  constructor Snake init(int l) {
+    let length = l;
+    let body = Body.init(length);
+    return this;
   }
-  function Array new(int l) {
-    var Array snake;
-    var int i, arrayL, randX, randY;
-    var boolean matched;
-    let arrayL = l + 1;
-    let snake = Array.new(arrayL); 
-    let i = 0;
-    while (i < l) {
-      let snake[i] = Block.new(i, 0);
-      let i = i + 1;
-    }
-    do Rand.setSeed(23);
-    let randX = Rand.randRange(49);
-    let randY = Rand.randRange(24);
-    let snake[i] = Block.new(randX, randY);
-    let matched = Snake.returnMatched(snake, l);
-		do Rand.setSeed(randX + randY);
-    while (matched) {
-      let randX = Rand.randRange(49);
-      let randY = Rand.randRange(24);
-      let snake[i] = Block.new(randX, randY);
-      let matched = Snake.returnMatched(snake, l);
-			do Rand.setSeed(randX + randY);
-    }
-    return snake;
+  method void dispose() {
+    do Body.dispose(body, length);
+    do body.dispose();
+    do Memory.deAlloc(this);
+    return; 
   }
-  function void disposeSnake(Array snake) {
-    do Memory.deAlloc(snake);
+  method void drawSnake() {
+    do Body.drawBody(body, length);
     return;
   }
-  function Array addBlock(int previousL, Array previousSnake) {
-    var Array newSnake;
-    var int i, newL, newArrayL, randX, randY, randSeed;
-    var boolean matched;
-    let newL = previousL + 1;
-    let newArrayL = newL + 1;
-    let newSnake = Array.new(newArrayL);
-    let i = 0;
-    while (i < newL) {
-      let newSnake[i] = previousSnake[i];
-      let i = i + 1;
-    }
-    do Snake.disposeSnake(previousSnake);
-    let randX = Rand.randRange(49);
-    let randY = Rand.randRange(24);
-    let newSnake[newL] = Block.new(randX, randY);
-    let matched = Snake.returnMatched(newSnake, newL);
-    let randSeed = Rand.rand();
-    do Rand.setSeed(randSeed);
-    while (matched) {
-      let randX = Rand.randRange(49);
-      let randY = Rand.randRange(24);
-      let newSnake[newL] = Block.new(randX, randY);
-      let matched = Snake.returnMatched(newSnake, newL);
-      let randSeed = Rand.rand();
-      do Rand.setSeed(randSeed);
-    }
-    return newSnake;
-  } 
-  function void moveBody(int l, Array snake) {
-    var int i, bodyNum, nextX, nextY;
-    var Block nextBlock;
-    let i = 0;
-    let bodyNum = l - 1;
-    while (i < bodyNum) {
-      let nextBlock = snake[i + 1];
-      let nextX = nextBlock.getX(); 
-      let nextY = nextBlock.getY();
-      let snake[i] = Block.new(nextX, nextY); 
-      let i = i + 1;
-    }
-    return;
+  method void moveSnake() {
+    do Body.moveBody(body, length, 1);
+    return; 
   }
-  function void moveHead(int l, Array snake, int dir) {
-    var Block headBlock;
-    var int headIndx;
-    let headIndx = l - 1;
-    let headBlock = snake[headIndx];
-    if (dir = 1) {do headBlock.moveRight();} 
-    if (dir = 2) {do headBlock.moveLeft();} 
-    if (dir = 3) {do headBlock.moveUp();} 
-    if (dir = 4) {do headBlock.moveDown();} 
+  // debug
+  method void printSnakeIndxs () {
+    do Body.printBodyIndxs(body, length);
     return;
-  }
-  // printIndxs is mainly for debugging 
-  function void printIndxs(int l, Array snake) {
-    var Block tmpBlock;
-    var int arrayL, i;
-    let arrayL = l + 1;
-    let i = 0;
-    do Output.printString("Current length: ");
-    do Output.printInt(l);
-    do Output.println();
-    do Output.println();
-    while (i < arrayL) {
-      let tmpBlock = snake[i];
-      do tmpBlock.printIndx();
-      let i = i + 1;
-    }
-    return;
-  }
-  function void drawSnake(int l, Array snake) {
-    var Block tmpBlock;
-    var int i, arrayL;
-    let i = 0;
-    let arrayL = l + 1;
-    while (i < arrayL) {
-      let tmpBlock = snake[i];
-      do tmpBlock.drawBlock(10, 1);
-      let i = i + 1;
-    }
-    return;  
   }
 }

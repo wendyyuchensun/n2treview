@@ -1,0 +1,43 @@
+class View {
+  field Block targetBlock;
+  field Snake snake;
+  
+  function Block newRandBlock() {
+    var int randX, randY;
+    var Block randBlock;
+    let randX = Rand.randRange(50); 
+    let randY = Rand.randRange(24);
+    let randBlock = Block.new(randX, randY);
+    return randBlock;
+  }
+
+  constructor View init(int seed, int l) {
+    do Rand.setSeed(seed);
+    let targetBlock = View.newRandBlock();
+    let snake = Snake.init(l);
+    return this;
+  }
+  
+  method void dispose() {
+    do Block.dispose(targetBlock);
+    do snake.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+  method void drawView() {
+    do Screen.clearScreen();
+    do snake.drawSnake();
+    do Block.blinkTarget(targetBlock);
+    return;
+  }
+  method void printViewIndxs() {
+    do Output.moveCursor(0, 0);
+    do snake.printSnakeIndxs();
+    do Block.printIndxs(targetBlock);
+    return;
+  }
+  method void moveView() {
+    do snake.moveSnake();
+    return;
+  }
+}

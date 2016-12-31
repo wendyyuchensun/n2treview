@@ -1,48 +1,99 @@
 class Block {
   field int xIndx, yIndx;
+  
   constructor Block new(int x, int y) {
     let xIndx = x;
     let yIndx = y;
     return this;
   }
-  method int getX() {
+  method int getXIndx() {
     return xIndx;
   }
-  method int getY() {
+  method int getYIndx() {
     return yIndx;
   }
-  method void moveRight() {
-    let xIndx = xIndx + 1;
+  method void setXIndx(int newXIndx) {
+    let xIndx = newXIndx;
     return;
   }
-  method void moveLeft() {
-    let xIndx = xIndx - 1;
+  method void setYIndx(int newYIndx) {
+    let yIndx = newYIndx;
     return;
   }
-  method void moveUp() {
-    let yIndx = yIndx - 1;
+  method void moveBlockWithDir(int dir) {
+    if (dir = 1) {let xIndx = xIndx + 1;}
+    if (dir = 2) {let xIndx = xIndx - 1;}
+    if (dir = 3) {let yIndx = yIndx - 1;}
+    if (dir = 4) {let yIndx = yIndx + 1;}
     return;
   }
-  method void moveDown() {
-    let yIndx = yIndx + 1;
+  function void moveHeadBlock(Block headBlock, int dir) {
+    do headBlock.moveBlockWithDir(dir);
     return;
   }
-  method void drawBlock(int blockW, int margin) {
+  method void passIndxsTo(Block destBlock) {
+    do destBlock.setXIndx(xIndx); 
+    do destBlock.setYIndx(yIndx);
+    return; 
+  }
+  function void passIndxsBetween(Block fromBlock, Block toBlock) {
+    do fromBlock.passIndxsTo(toBlock);
+    return;
+  }
+  function void dispose(Block block) {
+    do Memory.deAlloc(block);
+    return;
+  }
+  function void draw(int xCoord, int yCoord, int w, boolean c) {
     var int x1, y1, x2, y2;
-    let x1 = xIndx * blockW + margin;
-    let y1 = yIndx * blockW + margin;
-    let x2 = xIndx * blockW + blockW - margin;
-    let y2 = yIndx * blockW + blockW - margin;
-    do Screen.setColor(true);
+    let x1 = xCoord;
+    let y1 = yCoord;
+    let x2 = x1 + w;
+    let y2 = y1 + w;
+    do Screen.setColor(c);
     do Screen.drawRectangle(x1, y1, x2, y2);
     return;
   }
-  // printIndx is mainly for debugging
-  method void printIndx() {
+  function void drawBodyBlock(Block block, int blockW, int m) {  
+    var int xCoord, yCoord, w;
+    let xCoord = block.getXIndx() * blockW + m;
+    let yCoord = block.getYIndx() * blockW + m;
+    let w = blockW - (m * 2);
+    do Block.draw(xCoord, yCoord, w, true);
+    return;
+  }
+  method void drawTargetBlock(int blockW, int m) {
+    var int borderW, innerW, innerXCoord, innerYCoord;
+    let borderW = 1;
+    let innerW = blockW - ((m + borderW) * 2);
+    let innerXCoord = xIndx * blockW + m + borderW;
+    let innerYCoord = yIndx * blockW + m + borderW;
+    do Block.drawBodyBlock(this, blockW, m);
+    do Block.draw(innerXCoord, innerYCoord, innerW, false);
+    return;
+  }
+  function void blinkTarget(Block targetBlock) {
+    var boolean blink;
+    let blink = true;
+    while (blink) {
+      let blink = false;
+      do Block.drawBodyBlock(targetBlock, 10, 1);
+      do Sys.wait(5000);
+      do targetBlock.drawTargetBlock(10, 1);
+      do Sys.wait(5000);
+      let blink = true;
+    }
+    return;
+  }
+  // debug
+  function void printIndxs(Block block) {
     var String uParam, comma, lParam;
+    var int xIndx, yIndx;
+    let xIndx = block.getXIndx(); 
+    let yIndx = block.getYIndx(); 
     let uParam = "(";
     let comma = ",";
-    let lParam = "(";
+    let lParam = ")";
     do Output.printString(uParam);
     do Output.printInt(xIndx);
     do Output.printString(comma);
